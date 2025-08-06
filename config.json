@@ -1,0 +1,53 @@
+{
+    "placeholders": {
+        "name": {
+            "type": "cell",
+            "sheet": "Sheet1",
+            "cells": "A1",
+            "value": "Sheet1!A1"
+        },
+        "city": {
+            "type": "cell",
+            "sheet": "Sheet1",
+            "cells": "A2",
+            "value": "Sheet1!A2"
+        },
+        "revenue_table": {
+            "type": "range",
+            "sheet": "Sheet2",
+            "cells": "A1:D6",
+            "value": "Sheet2!A1:D6"
+        },
+        "performance_chart": {
+            "type": "chart",
+            "sheet": "Sheet3",
+            "chart_index": 0
+        }
+    },
+    "settings": {
+        "excel_file": "input_data.xlsx",
+        "output_file": "output_memo.xlsx",
+        "template_file": "template_memo.xlsx"
+    },
+    "memo_structure": {
+        "title": "Monthly Performance Memo",
+        "sections": [
+            {
+                "title": "Introduction",
+                "content": "This memo summarizes the performance for the month for client {{name}} in {{city}}."
+            },
+            {
+                "title": "Key Highlights",
+                "content": "The key highlights of the month include..."
+            },
+            {
+                "title": "Detailed Analysis",
+                "content": "A detailed analysis of the performance metrics."
+            },
+            {
+                "title": "Conclusion",
+                "content": "The conclusion and next steps."
+            }
+        ]
+    }
+}

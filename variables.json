@@ -1,0 +1,27 @@
+{
+    "name": {
+        "type": "cell",
+        "sheet": "Sheet1",
+        "cells": "A2"
+    },
+    "city": {
+        "type": "cell",
+        "sheet": "Sheet2",
+        "cells": "A2"
+    },
+    "choho": {
+        "type": "cell",
+        "sheet": "Sheet1",
+        "cells": "A2"
+    },
+    "revenue_table": {
+        "type": "range",
+        "sheet": "Sheet2",
+        "cells": "A1:D6"
+    },
+    "another": {
+        "type": "cell",
+        "sheet": "Sheet1",
+        "cells": "A5"
+    }
+}
