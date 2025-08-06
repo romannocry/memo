@@ -3,6 +3,7 @@ import openpyxl
 import json
 import pandas as pd
 
+__all__ = ['get_cell_value','render_load_tab']  # Only 'greet' will be importable via 'from mymodule import *'
 
 def get_cell_value(wb, typ, sheet, cells = ""):
     try:

@@ -1,3 +1,4 @@
+from section_editor import section_editor
 import streamlit as st
 import openpyxl
 import json
@@ -72,10 +73,21 @@ else:
 wb = openpyxl.load_workbook(excel_file, data_only=True)
 
 
+DEFAULT_STRUCTURE_PATH = "structure.json"
+
+# Load JSON structure from file
+try:
+    with open(DEFAULT_STRUCTURE_PATH, "r", encoding="utf-8") as f:
+        structure_json = json.load(f)
+except Exception as e:
+    st.error(f"Failed to load structure file: {e}")
+
+
 tabs = {
-    "Load": lambda: render_load_tab(variables_file, wb),
-    #"Config Editor": lambda: render_load_tab(variables_file, wb),
-    "Preview": lambda: render_preview_tab(memo_structure, placeholders)
+    "Load parameters": lambda: render_load_tab(variables_file, wb),
+    "Stucture Editor": lambda: section_editor(structure_json),#, list(variables_file.keys())),
+    "Preview document": lambda: render_preview_tab(memo_structure, variables_file, wb),
+    "Generate": lambda: render_preview_tab(memo_structure, variables_file, wb)
 }
 
 # Create tab objects
