@@ -5,7 +5,9 @@ import openpyxl
 import json
 import pandas as pd
 import re
-from load_tab import *
+from pages.load_tab import *
+
+__all__ = ['render_preview_tab','resolve_placeholders']
 
 def resolve_placeholders(text, placeholder_values, wb):
     # Replace {{key}} with corresponding value from placeholder_values

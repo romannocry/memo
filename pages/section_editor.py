@@ -2,6 +2,8 @@ import streamlit as st
 from typing import List, Dict
 import json
 
+__all__ = ['section_editor']
+
 def section_editor(structure: dict) -> dict:
     st.markdown("## 📝 Memo Section Editor", unsafe_allow_html=True)
     st.markdown(

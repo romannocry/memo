@@ -1,29 +1,37 @@
-from section_editor import section_editor
 import streamlit as st
 import openpyxl
 import json
-import pandas as pd
 import os
 from word_engine import *
-from load_tab import render_load_tab
-from preview import render_preview_tab
+from pages.load_tab import render_load_tab
+from pages.preview import render_preview_tab
+from pages.section_editor import section_editor
+from pages.preview import render_preview_tab
+from shared.utils import read_json_file
+import shared.css as css
 
-# Inject custom CSS to make the main container full width
-st.markdown(
-    """
-    <style>
-        .stMainBlockContainer {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            max-width: 100% !important;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+wb = openpyxl.load_workbook("./inputs/input_data.xlsx", data_only=True)
 
+
+tabs = {
+    "Load parameters": lambda: render_load_tab(read_json_file('./config/variables.json'), wb),
+    "Load parameters 2": lambda: render_load_tab(read_json_file('./config/variables.json'), wb),
+    #"Stucture Editor": lambda: section_editor(structure_json),#, list(variables_file.keys())),
+    #"Preview document": lambda: render_preview_tab(memo_structure, variables_file, wb),
+    #"Generate": lambda: render_preview_tab(memo_structure, variables_file, wb)
+}
+
+# Create tab objects
+tab_objs = st.tabs(tabs.keys())
+
+# Render each tab's content
+for tab_obj, render_func in zip(tab_objs, tabs.values()):
+    with tab_obj:
+        render_func()
+
+
+        """
+        
 # Sidebar override uploads
 st.sidebar.header("📁 Override Inputsss")
 uploaded_excel = st.sidebar.file_uploader("Upload Excel File", type=["xlsx"])
@@ -83,17 +91,5 @@ except Exception as e:
     st.error(f"Failed to load structure file: {e}")
 
 
-tabs = {
-    "Load parameters": lambda: render_load_tab(variables_file, wb),
-    "Stucture Editor": lambda: section_editor(structure_json),#, list(variables_file.keys())),
-    "Preview document": lambda: render_preview_tab(memo_structure, variables_file, wb),
-    "Generate": lambda: render_preview_tab(memo_structure, variables_file, wb)
-}
-
-# Create tab objects
-tab_objs = st.tabs(tabs.keys())
-
-# Render each tab's content
-for tab_obj, render_func in zip(tab_objs, tabs.values()):
-    with tab_obj:
-        render_func()
+        
+        """
