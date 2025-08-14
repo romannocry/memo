@@ -1,40 +1,51 @@
-
-
 import streamlit as st
 import openpyxl
 import json
-import pandas as pd
 import re
-from pages.load_tab import *
+from shared.utils import get_cell_value, resolve_placeholders
+from pathlib import Path
+from shared.word_generator import generate_word_from_html
 
-__all__ = ['render_preview_tab','resolve_placeholders']
+__all__ = ['render_preview_tab']
 
-def resolve_placeholders(text, placeholder_values, wb):
-    # Replace {{key}} with corresponding value from placeholder_values
-    def replacer(match):
-        key = match.group(1)
-        if key in placeholder_values:
-            value = placeholder_values[key]
-            return get_cell_value(wb, value.get("type"), value.get("sheet"), value.get("cells"))
-        else:
-            return str(value)
-        #return str(placeholder_values.get(key, f"{{{{{key}}}}}"))  # leave untouched if not found
 
-    return re.sub(r"\{\{(\w+)\}\}", replacer, text)
 
-def render_preview_tab(memo_structure: dict, placeholder_values: dict, wb: openpyxl.Workbook):
-
-    DEFAULT_STRUCTURE_PATH = "structure.json"
-
-    # Load JSON structure from file
-    try:
-        with open(DEFAULT_STRUCTURE_PATH, "r", encoding="utf-8") as f:
-            structure_json = json.load(f)
-    except Exception as e:
-        st.error(f"Failed to load structure file: {e}")
-        return
-
-    # Display the JSON as text or parsed object
+def render_preview_tab(wb):
     st.title("Memo Preview")
-    st.text(resolve_placeholders(str(structure_json), placeholder_values, wb))  # Renders nicely formatted and expandable JSON
-    #st.text(resolve_placeholders(memo_structure,placeholder_values))
+
+    # Load placeholder values from config
+    config_path = Path(__file__).parent.parent / "config" / "variables.json"
+    with open(config_path) as f:
+        placeholder_values = json.load(f)
+
+    # Create two columns
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Input")
+        input_text = st.text_area(
+            "",
+            height=400,
+            value="""{{name}}"""
+        )
+
+    with col2:
+        st.subheader("Output")
+        if input_text:
+            try:
+                output_text = resolve_placeholders(input_text, placeholder_values, wb)
+                output_html = "<div class='memo-container'>"+output_text.replace("\n", "<br>")+"</div>"
+                st.markdown(
+                        output_html,
+                        unsafe_allow_html=True)
+            except Exception as e:
+                st.error(f"Error resolving placeholders: {e}")
+        if st.button("📄 Generate Word Document"):
+            file_path = generate_word_from_html(output_html, output_path="memo.docx")
+            with open(file_path, "rb") as f:
+                st.download_button(
+                    "Download Word Memo",
+                    f,
+                    file_name="memo.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )

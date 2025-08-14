@@ -23,5 +23,10 @@
         "type": "cell",
         "sheet": "Sheet1",
         "cells": "A5"
+    },
+    "test": {
+        "type": "cell",
+        "sheet": "Sheet2",
+        "cells": "a3"
     }
 }
